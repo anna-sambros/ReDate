@@ -13,9 +13,9 @@ class ReDate():
     @classmethod 
     def number_range_regexp(cls, start, end):
         if int(start) > int(end):
-            raise Exception('Start number is higher than end number')
+            raise ValueError('Start number is higher than end number')
         elif len(start) != len(end):
-            raise Exception('Numbers is not of the same length')
+            raise ValueError('Numbers is not of the same length')
 
         if len(start) == 1:
             if start == end:
@@ -36,7 +36,7 @@ class ReDate():
             result += '|'
             first_start = int(start[0])
             first_end = int(end[0])
-            if first_start+1 != first_end:
+            if first_end - first_start > 1:
                 if first_start+1 == first_end-1:
                     # a+1[0-9]{len-1}
                     result += str(first_start+1)
@@ -44,7 +44,10 @@ class ReDate():
                     # [a+1 - b-1][0-9]{len-1}
                     result += '[' + str(first_start+1) 
                     result += '-' + str(first_end-1) + ']'
-                result += '[0-9]{' + str(len(start[1:])) + '}'
+                
+                result += '[0-9]'
+                if len(start[1:]) > 1:
+                    result += '{' + str(len(start[1:])) + '}'
                 result += '|' 
 
             # b(regexp_range(00-yy))
@@ -57,7 +60,6 @@ class ReDate():
         return result 
 
 if __name__=='__main__':
-    r = ReDate()
-    result = r.number_range_regexp(str(109), str(733))
+    result = ReDate.number_range_regexp(str(180), str(390))
     print(result)
 
