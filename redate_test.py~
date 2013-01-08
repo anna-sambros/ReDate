@@ -1,16 +1,35 @@
 import random
+import re
 import unittest
+from redate import ReDate
+from datetime import date
 
 class TestReDateGenerator(unittest.TestCase):
 
-    
-    def test_default_format(self):
-        before_date = date(1980, 7, 17)
-        after_date = date(2012, 12, 17)
-        date_regexp = ReDate(before_date, after_date)
-        date_regexp.get()
+    def test_number_range_1(self):
+        pattern = ReDate.number_range_regexp(str(109), str(733))
+        match = re.search(pattern, 'number 108 string')
+        self.assertTrue(match is None)
 
+    def test_number_range_2(self):
+        pattern = ReDate.number_range_regexp(str(109), str(733))
+        match = re.search(pattern, 'number 109 string', pattern)
+        self.assertTrue(match is not None)
 
+    def test_number_range_3(self):
+        pattern = ReDate.number_range_regexp(str(109), str(733))
+        match = re.search(pattern, 'number 555 string')
+        self.assertTrue(match is not None)
+
+    def test_number_range_4(self):
+        pattern = ReDate.number_range_regexp(str(109), str(733))
+        match = re.search(pattern, 'number 733 string')
+        self.assertTrue(match is not None)
+
+    def test_number_range_5(self):
+        pattern = ReDate.number_range_regexp(str(109), str(733))
+        match = re.search(pattern, 'number 734 string')
+        self.assertTrue(match is None)
 
 
 
